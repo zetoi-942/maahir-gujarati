@@ -70,6 +70,7 @@ export const useGeminiLive = () => {
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [currentEmotion, setCurrentEmotion] = useState<Emotion>('NEUTRAL');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const [conversationHistory, setConversationHistory] = useState<Message[]>([
       { sender: 'system', text: "નમસ્તે! હું માહિર છું, તમારો AI અભ્યાસ મિત્ર. માઇક દબાવો અને તમારો પ્રશ્ન પૂછો." }
@@ -102,6 +103,10 @@ export const useGeminiLive = () => {
     isSpeakingRef.current = isSpeaking;
   }, [isSpeaking]);
   
+  const clearError = useCallback(() => {
+    setErrorMessage(null);
+  }, []);
+
   const endQuiz = useCallback((finalMessage?: string) => {
     const messageText = finalMessage || `Quiz finished! Your final score: ${userScore}/${quizQuestions.length}`;
     setConversationHistory(prev => [...prev, { sender: 'system', text: messageText }]);
@@ -205,6 +210,7 @@ export const useGeminiLive = () => {
   const startSession = useCallback(async () => {
     if (isSessionActive) return;
 
+    clearError();
     setStatus('LISTENING');
     setIsListening(true);
     setCurrentEmotion('NEUTRAL');
@@ -216,7 +222,10 @@ export const useGeminiLive = () => {
     audioSourcesRef.current.clear();
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
+      if (!process.env.API_KEY) {
+        throw new Error("API key is missing. Please ensure it is configured correctly.");
+      }
+      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       mediaStreamRef.current = stream;
@@ -379,17 +388,21 @@ export const useGeminiLive = () => {
               }
             } catch (error) {
                 console.error("Error processing message:", error);
+                setErrorMessage("An error occurred while processing the server's response.");
                 setStatus('ERROR');
                 stopSession();
             }
           },
           onerror: (e: ErrorEvent) => {
             console.error('Session error:', e);
+            setErrorMessage('A connection error occurred. Please check your network and try again.');
             setStatus('ERROR');
             stopSession();
           },
           onclose: (e: CloseEvent) => {
-            stopSession();
+            if (sessionRef.current) { // Avoid calling stopSession if it was already manually stopped
+                stopSession();
+            }
           },
         },
       });
@@ -398,10 +411,21 @@ export const useGeminiLive = () => {
       setIsSessionActive(true);
     } catch (error) {
       console.error('Failed to start session:', error);
+      let msg = 'An unexpected error occurred while starting the session.';
+      if (error instanceof Error) {
+        if (error.name === 'NotAllowedError' || error.message.includes('Permission denied')) {
+            msg = 'Microphone access is required. Please allow microphone permission in your browser settings and try again.';
+        } else if (error.message.toLowerCase().includes('api key')) {
+            msg = 'The API key is missing or invalid. This can happen on a new deployment. Please ensure it is configured correctly.';
+        } else {
+            msg = error.message;
+        }
+      }
+      setErrorMessage(msg);
       setStatus('ERROR');
       stopSession();
     }
-  }, [isSessionActive, stopSession, isQuizMode, endQuiz]);
+  }, [isSessionActive, stopSession, isQuizMode, endQuiz, clearError]);
 
-  return { isSessionActive, startSession, stopSession, status, isListening, isSpeaking, conversationHistory, liveUserTranscript, liveModelTranscript, currentEmotion, isQuizMode, quizQuestions, currentQuestionIndex, userScore, quizFeedback, submitAnswer, endQuiz };
+  return { isSessionActive, startSession, stopSession, status, isListening, isSpeaking, conversationHistory, liveUserTranscript, liveModelTranscript, currentEmotion, isQuizMode, quizQuestions, currentQuestionIndex, userScore, quizFeedback, submitAnswer, endQuiz, errorMessage, clearError };
 };

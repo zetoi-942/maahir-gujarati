@@ -23,6 +23,8 @@ export default function App() {
     quizFeedback,
     submitAnswer,
     endQuiz,
+    errorMessage,
+    clearError,
   } = useGeminiLive();
 
   const handleMicClick = () => {
@@ -67,6 +69,21 @@ export default function App() {
         />
         <p className="text-gray-400 text-xl mt-6">Founder: Maahir</p>
       </footer>
+
+      {errorMessage && (
+        <div className="absolute inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-6 sm:p-8 rounded-2xl shadow-2xl border border-red-500/50 max-w-md w-full text-center animate-slide-in-left">
+                <h2 className="text-4xl sm:text-5xl text-red-400 mb-4">An Error Occurred</h2>
+                <p className="font-inter text-lg sm:text-xl text-gray-200 mb-6">{errorMessage}</p>
+                <button
+                    onClick={clearError}
+                    className="font-sans px-6 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition-colors duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75"
+                >
+                    Dismiss
+                </button>
+            </div>
+        </div>
+      )}
     </main>
   );
 }
