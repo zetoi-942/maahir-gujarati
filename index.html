@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Maahir: Gujarati Voice AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+      body {
+        overscroll-behavior: none;
+      }
+      .font-great-vibes {
+        font-family: 'Great Vibes', cursive;
+      }
+      .font-inter {
+        font-family: 'Inter', sans-serif;
+      }
+      @keyframes pulse-fast {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0; }
+      }
+      .animate-pulse-fast { animation: pulse-fast 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+
+      @keyframes background-pan {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+      .animate-background-pan {
+        background-size: 200% 200%;
+        animation: background-pan 15s ease infinite;
+      }
+
+      @keyframes text-glow {
+        0%, 100% { text-shadow: 0 0 5px rgba(0, 255, 255, 0.4), 0 0 10px rgba(0, 255, 255, 0.3), 0 0 15px rgba(0, 255, 255, 0.2); }
+        50% { text-shadow: 0 0 10px rgba(0, 255, 255, 0.6), 0 0 20px rgba(0, 255, 255, 0.4), 0 0 25px rgba(0, 255, 255, 0.3); }
+      }
+      .animate-text-glow {
+        animation: text-glow 4s ease-in-out infinite;
+      }
+
+      /* इमोशन एनिमेशन */
+      @keyframes logo-pulse {
+        0%, 100% { transform: scale(1); text-shadow: 0 0 5px rgba(0, 255, 255, 0.4); }
+        50% { transform: scale(1.03); text-shadow: 0 0 12px rgba(0, 255, 255, 0.6); }
+      }
+      .animate-logo-pulse { animation: logo-pulse 2.5s ease-in-out infinite; }
+
+      @keyframes logo-flare {
+        0%, 100% { text-shadow: 0 0 8px rgba(120, 255, 255, 0.8), 0 0 16px rgba(120, 255, 255, 0.6); }
+        50% { text-shadow: 0 0 16px rgba(200, 255, 255, 1), 0 0 32px rgba(200, 255, 255, 0.8); }
+      }
+      .animate-logo-flare { animation: logo-flare 1.5s ease-in-out infinite; }
+
+      @keyframes slide-in-left {
+        from { opacity: 0; transform: translateX(-20px); }
+        to { opacity: 1; transform: translateX(0); }
+      }
+      .animate-slide-in-left { animation: slide-in-left 0.4s ease-out; }
+
+      @keyframes slide-in-right {
+        from { opacity: 0; transform: translateX(20px); }
+        to { opacity: 1; transform: translateX(0); }
+      }
+      .animate-slide-in-right { animation: slide-in-right 0.4s ease-out; }
+
+      @keyframes mic-icon-pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+      }
+      .animate-mic-icon-pulse { animation: mic-icon-pulse 1.5s ease-in-out infinite; }
+      
+      /* सजावटी पृष्ठभूमि */
+      .stars {
+        background: 
+          radial-gradient(ellipse at top, transparent, #000),
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='10' cy='10' r='0.5' fill='%23fff'/%3E%3Ccircle cx='30' cy='40' r='0.7' fill='%23fff'/%3E%3Ccircle cx='50' cy='80' r='0.5' fill='%23fff'/%3E%3Ccircle cx='80' cy='20' r='0.6' fill='%23fff'/%3E%3Ccircle cx='90' cy='60' r='0.4' fill='%23fff'/%3E%3Ccircle cx='70' cy='90' r='0.8' fill='%23fff'/%3E%3Ccircle cx='40' cy='15' r='0.5' fill='%23fff'/%3E%3Ccircle cx='60' cy='50' r='0.7' fill='%23fff'/%3E%3C/svg%3E");
+        animation: star-twinkle 200s linear infinite;
+      }
+      @keyframes star-twinkle {
+        from { background-position: 0 0; }
+        to { background-position: -10000px 5000px; }
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.25.0"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,7 @@
+{
+  "name": "Maahir: Your AI Study Buddy",
+  "description": "Maahir is your personal AI study buddy. Ask homework questions, get explanations on complex topics, and practice quizzes, all in Gujarati. Learning made easy. Founder: Maahir.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
